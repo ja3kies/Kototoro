@@ -74,6 +74,9 @@ fun HomeScreenLayout(
             contentPadding = contentPadding,
             verticalArrangement = Arrangement.spacedBy(HomeScreenSectionGap),
         ) {
+            if (initialized && !hasHero && !hasHighlights) {
+                item(key = "home_greeting") { greeting() }
+            }
             if (hasHighlights) {
                 if (hasHero) {
                     if (heroInsideList) item(key = "home_hero") { hero(Modifier, layoutClass) }

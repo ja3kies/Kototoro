@@ -209,13 +209,17 @@ class SharedHomeScreenTest {
                         highlights = { Box(Modifier.height(700.dp)) },
                         quickActions = { Text("快捷入口", Modifier.testTag("test-quick")) },
                         loading = { Text("正在加载", Modifier.testTag("test-loading")) },
+                        greeting = { Text("Find your next read", Modifier.testTag("test-greeting")) },
                     )
                 }
             }
             onNodeWithTag("test-loading").assertExists()
+            onNodeWithTag("test-greeting").assertDoesNotExist()
             runOnIdle { initialized = true }
             onNodeWithTag("test-loading").assertDoesNotExist()
+            onNodeWithTag("test-greeting").assertIsDisplayed()
             runOnIdle { hasHighlights = true }
+            onNodeWithTag("test-greeting").assertDoesNotExist()
             // Existing quick-access keys keep the user's scroll anchor when loaded sections are inserted above it.
             onNodeWithTag("home-scroll").performScrollToNode(hasTestTag("test-hero"))
             onNodeWithTag("test-hero").assertIsDisplayed()
