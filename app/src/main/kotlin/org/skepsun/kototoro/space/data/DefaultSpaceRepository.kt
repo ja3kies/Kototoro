@@ -23,8 +23,10 @@ class DefaultSpaceRepository @Inject constructor(
 ) : SpaceRepository {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Default)
 
+    // Legacy novel/anime spaces must never become the initial active reader space.
+    // Keeping custom IDs here is important: their persisted definitions load asynchronously.
     private val initialSpace = SpaceId(localDataSource.readActiveSpaceId()).takeIf {
-        it in setOf(BuiltInSpaces.Manga, BuiltInSpaces.Novel) || it.value.startsWith("custom:")
+        it == BuiltInSpaces.Manga || it.value.startsWith("custom:")
     }
         ?: BuiltInSpaces.Manga
     private val mutableActiveSpace = MutableStateFlow(initialSpace)
