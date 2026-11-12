@@ -32,7 +32,7 @@ import javax.inject.Inject
  * - 浏览走 OFFSET 分页（每页 [LOCAL_PAGE_SIZE] 条），搜索带 query 时返回完整结果集；
  * - getAll() 覆盖批量消费方（删除等），过滤与排序语义与旧实现一致。
  *
- * 通过预置 "_local_index/ver=4" 跳过 LocalContentIndex 的全量扫描修复，隔离数据库读取路径。
+ * 通过预置 "_local_index/ver=5" 跳过 LocalContentIndex 的全量扫描修复，隔离数据库读取路径。
  */
 @HiltAndroidTest
 @RunWith(AndroidJUnit4::class)
@@ -52,7 +52,7 @@ class LocalLibraryPagingTest {
 
 	private companion object {
 		const val INDEX_PREF_NAME = "_local_index"
-		const val INDEX_VERSION = 4
+		const val INDEX_VERSION = 5
 		const val PAGE_SIZE = 128
 	}
 

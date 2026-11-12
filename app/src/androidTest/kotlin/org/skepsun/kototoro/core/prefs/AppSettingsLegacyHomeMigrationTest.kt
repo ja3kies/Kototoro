@@ -41,7 +41,7 @@ class AppSettingsLegacyHomeMigrationTest {
 		settings.reconcileAfterAppUpgrade(currentVersion = 20260421)
 
 		assertEquals("all", settings.getSelectedGroupTab())
-		assertEquals(setOf("mihon", "tvbox"), settings.getSelectedSourceTags())
+		assertEquals(setOf("mihon"), settings.getSelectedSourceTags())
 		assertEquals(123L, settings.backupWebDavLastUploadTime)
 		assertEquals(456L, settings.backupWebDavLastRestoreTime)
 		assertEquals(789L, settings.backupWebDavLastAutoRestoreCheckTime)
