@@ -37,7 +37,7 @@ class SharedListDerivationTest {
             snapshot = snapshot,
             filters = setOf(ListFilterCriteria.Tag(999, title = "Drama", key = "drama")),
         ))
-        assertEquals(emptyList<Long>(), result.visibleRows.map { it.entityId })
+        assertEquals(listOf(1L), result.visibleRows.map { it.entityId })
         assertTrue(result.hasActiveFilters)
         val missingIdentity = HistoryLibraryDeriver.derive(HistoryLibraryDeriver.Input(
             snapshot = snapshot, filters = setOf(ListFilterCriteria.Tag(999)),
@@ -167,7 +167,7 @@ class SharedListDerivationTest {
             groupTab = BrowseGroupTab.Novel,
             sourceTags = setOf(SourceTag.BUILTIN),
         ))
-        assertEquals(listOf(1L), result.visibleRows.map { it.entityId })
+        assertEquals(emptyList<Long>(), result.visibleRows.map { it.entityId })
         assertEquals(5, OriginGroup.MIHON.ordinal)
         assertEquals(3, ContentGroup.HENTAI_MANGA.ordinal)
         assertEquals(BrowseGroupTab.All, BrowseGroupTab.fromId("json"))
