@@ -13,7 +13,7 @@ class BrowseGroupTabTest {
         assertTrue(BrowseGroupTab.fromId("video") == BrowseGroupTab.All)
         assertFalse(BrowseGroupTab.Video in BrowseGroupTab.getAllTabs())
         assertTrue(BrowseGroupTab.All.matchesContentType(ContentType.MANGA))
-        assertTrue(BrowseGroupTab.All.matchesContentType(ContentType.NOVEL))
+        assertFalse(BrowseGroupTab.All.matchesContentType(ContentType.NOVEL))
         assertFalse(BrowseGroupTab.All.matchesContentType(ContentType.HENTAI_VIDEO))
     }
 
@@ -47,7 +47,7 @@ class BrowseGroupTabTest {
 
 	@Test
 	fun `all tab contains only reading content types`() {
-		assertTrue(BrowseGroupTab.All.matchesContentType(ContentType.NOVEL))
+		assertFalse(BrowseGroupTab.All.matchesContentType(ContentType.NOVEL))
 		assertFalse(BrowseGroupTab.All.matchesContentType(ContentType.VIDEO))
 		assertFalse(BrowseGroupTab.All.matchesContentType(ContentType.OTHER))
 	}
@@ -69,4 +69,12 @@ class BrowseGroupTabTest {
 		assertFalse(ContentType.NOVEL in contentTypes)
 		assertFalse(ContentType.VIDEO in contentTypes)
 	}
+    @Test
+    fun `reader navigation hides novel and video selectors`() {
+        assertTrue(BrowseGroupTab.getAllTabs() == listOf(BrowseGroupTab.Content))
+        assertTrue(BrowseGroupTab.fromId("novel") == BrowseGroupTab.All)
+        assertFalse(BrowseGroupTab.Content.matchesContentType(ContentType.IMAGE_SET))
+        assertFalse(BrowseGroupTab.Content.matchesContentType(ContentType.GAME_CG))
+    }
+
 }

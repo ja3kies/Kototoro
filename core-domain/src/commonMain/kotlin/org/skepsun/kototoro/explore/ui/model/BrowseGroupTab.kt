@@ -36,11 +36,7 @@ sealed class BrowseGroupTab(
         /**
          * Get all available tabs in order
          */
-        fun getAllTabs(): List<BrowseGroupTab> = listOf(
-            All,
-            Content,
-            Novel,
-        )
+        fun getAllTabs(): List<BrowseGroupTab> = listOf(Content)
 
         /**
          * Find tab by ID
@@ -48,7 +44,7 @@ sealed class BrowseGroupTab(
         fun fromId(id: String): BrowseGroupTab = when (id) {
             "all" -> All
             "manga" -> Content
-            "novel" -> Novel
+            "novel" -> All // Legacy novel selection migrates to manga-only scope
             "video" -> All
             // Legacy IDs now fall back to All
             "json", "mihon", "aniyomi" -> All
@@ -67,8 +63,7 @@ sealed class BrowseGroupTab(
      * Check if this tab matches a content group
      */
     fun matchesContentGroup(group: ContentGroup): Boolean = when (this) {
-        All -> group != ContentGroup.VIDEO && group != ContentGroup.HENTAI_VIDEO
-        Content -> group == ContentGroup.MANGA || group == ContentGroup.HENTAI_MANGA
+        All, Content -> group == ContentGroup.MANGA || group == ContentGroup.HENTAI_MANGA
         Novel -> group == ContentGroup.NOVEL || group == ContentGroup.HENTAI_NOVEL
         Video -> group == ContentGroup.VIDEO || group == ContentGroup.HENTAI_VIDEO
     }
@@ -83,16 +78,7 @@ sealed class BrowseGroupTab(
      */
     fun matchesContentType(type: ContentType): Boolean = when (this) {
         All -> type in ReaderContentPolicy.contentTypes
-        Content -> type == ContentType.MANGA ||
-            type == ContentType.MANHWA ||
-            type == ContentType.MANHUA ||
-            type == ContentType.COMICS ||
-            type == ContentType.ONE_SHOT ||
-            type == ContentType.DOUJINSHI ||
-            type == ContentType.IMAGE_SET ||
-            type == ContentType.ARTIST_CG ||
-            type == ContentType.GAME_CG ||
-            type == ContentType.HENTAI_MANGA
+        Content -> type in ReaderContentPolicy.contentTypes
         Novel -> type == ContentType.NOVEL || type == ContentType.HENTAI_NOVEL
         Video -> type == ContentType.VIDEO || type == ContentType.HENTAI_VIDEO
     }
@@ -104,18 +90,7 @@ sealed class BrowseGroupTab(
      */
     fun allowedContentTypes(): Set<ContentType>? = when (this) {
         All -> ReaderContentPolicy.contentTypes
-        Content -> setOf(
-            ContentType.MANGA,
-            ContentType.MANHWA,
-            ContentType.MANHUA,
-            ContentType.COMICS,
-            ContentType.ONE_SHOT,
-            ContentType.DOUJINSHI,
-            ContentType.IMAGE_SET,
-            ContentType.ARTIST_CG,
-            ContentType.GAME_CG,
-            ContentType.HENTAI_MANGA,
-        )
+        Content -> ReaderContentPolicy.contentTypes
         Novel -> setOf(ContentType.NOVEL, ContentType.HENTAI_NOVEL)
         Video -> setOf(ContentType.VIDEO, ContentType.HENTAI_VIDEO)
     }

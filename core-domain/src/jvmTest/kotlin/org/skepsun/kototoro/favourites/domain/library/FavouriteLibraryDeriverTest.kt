@@ -434,7 +434,7 @@ class FavouriteLibraryDeriverTest {
             snap,
             FavouriteLibraryDerivationInput(allowedSourceNames = setOf("TEST")),
         ).visibleIdsByCategory.getValue(FavouriteLibraryAllCategoryId).toSet()
-        assertEquals(setOf(1L, 2L), testSources)
+        assertEquals(setOf(1L), testSources)
 
         val both = deriveFavouriteLibraryState(
             snap,
@@ -473,10 +473,8 @@ class FavouriteLibraryDeriverTest {
             snap,
             FavouriteLibraryDerivationInput(groupTab = BrowseGroupTab.Content),
         ).visibleIdsByCategory.getValue(FavouriteLibraryAllCategoryId).toSet()
-        // OR semantics (legacy `!sourceGroupMatches && !typeMatches -> drop`): the
-        // persisted MANGA type (1), the MANGA source flag (2) and even a NOVEL type
-        // with a MANGA flag (3) all pass; only the NOVEL flag alone misses (4).
-        assertEquals(setOf(1L, 2L, 3L), content)
+        // Persisted novel types are excluded regardless of their manga source-group flag.
+        assertEquals(setOf(1L, 2L), content)
     }
 
     @Test

@@ -132,8 +132,15 @@ internal fun applyVisibility(
     val visible = HashSet<Long>(snapshot.rowsByEntityId.size)
     outer@ for (entityId in snapshot.allEntityIds) {
         val row = snapshot.rowsByEntityId.getValue(entityId)
-        val fallbackType = if (row.sourceGroupFlags and
-            (groupMask(ContentGroup.VIDEO) or groupMask(ContentGroup.HENTAI_VIDEO)) != 0) ContentType.VIDEO else ContentType.MANGA
+        val fallbackType = when {
+            row.sourceGroupFlags and
+                (groupMask(ContentGroup.VIDEO) or groupMask(ContentGroup.HENTAI_VIDEO)) != 0 ->
+                ContentType.VIDEO
+            row.sourceGroupFlags and
+                (groupMask(ContentGroup.NOVEL) or groupMask(ContentGroup.HENTAI_NOVEL)) != 0 ->
+                ContentType.NOVEL
+            else -> ContentType.MANGA
+        }
         if (!org.skepsun.kototoro.core.model.ReaderContentPolicy.acceptsSnapshot(
                 row.sourceName, row.contentType, fallbackType,
             )) continue@outer
@@ -218,8 +225,15 @@ internal fun applyQuickFilters(
     val result = HashSet<Long>(visible.size)
     outer@ for (entityId in visible) {
         val row = snapshot.rowsByEntityId.getValue(entityId)
-        val fallbackType = if (row.sourceGroupFlags and
-            (groupMask(ContentGroup.VIDEO) or groupMask(ContentGroup.HENTAI_VIDEO)) != 0) ContentType.VIDEO else ContentType.MANGA
+        val fallbackType = when {
+            row.sourceGroupFlags and
+                (groupMask(ContentGroup.VIDEO) or groupMask(ContentGroup.HENTAI_VIDEO)) != 0 ->
+                ContentType.VIDEO
+            row.sourceGroupFlags and
+                (groupMask(ContentGroup.NOVEL) or groupMask(ContentGroup.HENTAI_NOVEL)) != 0 ->
+                ContentType.NOVEL
+            else -> ContentType.MANGA
+        }
         if (!org.skepsun.kototoro.core.model.ReaderContentPolicy.acceptsSnapshot(
                 row.sourceName, row.contentType, fallbackType,
             )) continue@outer
