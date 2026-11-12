@@ -4,11 +4,17 @@ import org.skepsun.kototoro.parsers.model.ContentType
 
 /** Reading scope, independent of loaded extensions. Persisted enum values remain unchanged. */
 object ReaderContentPolicy {
-    val contentTypes: Set<ContentType> = ContentType.entries.filterTo(linkedSetOf()) {
-        it != ContentType.VIDEO && it != ContentType.HENTAI_VIDEO && it != ContentType.OTHER
-    }
+    val contentTypes: Set<ContentType> = setOf(
+        ContentType.MANGA, ContentType.MANHWA, ContentType.MANHUA,
+        ContentType.COMICS, ContentType.HENTAI_MANGA,
+        ContentType.ONE_SHOT, ContentType.DOUJINSHI,
+    )
 
-    private val retiredSourcePrefixes = listOf("ANIYOMI_", "CLOUDSTREAM_", "JSON_TVBOX_")
+    private val retiredSourcePrefixes = listOf(
+        "ANIYOMI_", "CLOUDSTREAM_", "JSON_TVBOX_",
+        "JSON_LEGADO_", "JSON_LNREADER_", "IREADER_", "TSUNDOKU_",
+        "LOCAL_NOVEL",
+    )
 
     fun acceptsSource(name: String, type: ContentType): Boolean =
         name != "LOCAL_VIDEO" && retiredSourcePrefixes.none(name::startsWith) && type in contentTypes

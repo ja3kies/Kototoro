@@ -44,24 +44,16 @@ class SpaceContentPolicyTest {
                 ContentType.HENTAI_MANGA,
                 ContentType.ONE_SHOT,
                 ContentType.DOUJINSHI,
-                ContentType.IMAGE_SET,
-                ContentType.ARTIST_CG,
-                ContentType.GAME_CG,
             ),
             policy.allowedTypes(BuiltInSpaces.Manga),
         )
     }
 
     @Test
-    fun `novel stays available and retired anime has no active scope`() {
-        assertEquals(
-            setOf(ContentType.NOVEL, ContentType.HENTAI_NOVEL),
-            policy.allowedTypes(BuiltInSpaces.Novel),
-        )
-        assertEquals(
-            emptySet<ContentType>(),
-            policy.allowedTypes(BuiltInSpaces.Anime),
-        )
+    fun `novel and anime spaces are inactive but their IDs remain for migration`() {
+        assertEquals(emptySet<ContentType>(), policy.allowedTypes(BuiltInSpaces.Novel))
+        assertEquals(emptySet<ContentType>(), policy.allowedTypes(BuiltInSpaces.Anime))
+        assertEquals(listOf(BuiltInSpaces.Manga), BuiltInSpaces.contexts.map { it.id })
     }
 
     @Test

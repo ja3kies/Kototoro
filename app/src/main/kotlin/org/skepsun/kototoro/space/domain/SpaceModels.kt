@@ -43,22 +43,9 @@ object BuiltInSpaces {
                 ContentType.HENTAI_MANGA,
                 ContentType.ONE_SHOT,
                 ContentType.DOUJINSHI,
-                ContentType.IMAGE_SET,
-                ContentType.ARTIST_CG,
-                ContentType.GAME_CG,
             ),
             sortKey = 0,
         ),
-        SpaceContext(
-            id = Novel,
-            kind = SpaceKind.NOVEL,
-            allowedContentTypes = setOf(
-                ContentType.NOVEL,
-                ContentType.HENTAI_NOVEL,
-            ),
-            sortKey = 1,
-        ),
-
     )
 }
 

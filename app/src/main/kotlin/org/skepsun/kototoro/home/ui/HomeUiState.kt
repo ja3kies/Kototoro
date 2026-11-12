@@ -106,11 +106,8 @@ data class HomeSummaryState(
 )
 
 internal fun ContentType.toHomeTab(): HomeContentTab? = when (this) {
-    ContentType.NOVEL,
-    ContentType.HENTAI_NOVEL -> HomeContentTab.NOVEL
-
-    ContentType.VIDEO,
-    ContentType.HENTAI_VIDEO -> HomeContentTab.VIDEO
+    ContentType.NOVEL, ContentType.HENTAI_NOVEL,
+    ContentType.VIDEO, ContentType.HENTAI_VIDEO -> null
 
     ContentType.MANGA,
     ContentType.HENTAI_MANGA,
@@ -118,9 +115,8 @@ internal fun ContentType.toHomeTab(): HomeContentTab? = when (this) {
     ContentType.MANHWA,
     ContentType.MANHUA,
     ContentType.ONE_SHOT,
-    ContentType.DOUJINSHI,
-    ContentType.IMAGE_SET,
-    ContentType.ARTIST_CG,
-    ContentType.GAME_CG,
-    ContentType.OTHER -> HomeContentTab.MANGA
+    ContentType.DOUJINSHI -> HomeContentTab.MANGA
+
+    ContentType.IMAGE_SET, ContentType.ARTIST_CG,
+    ContentType.GAME_CG, ContentType.OTHER -> null
 }

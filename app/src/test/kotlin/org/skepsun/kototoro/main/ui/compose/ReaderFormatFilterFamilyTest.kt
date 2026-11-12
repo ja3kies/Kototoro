@@ -14,9 +14,9 @@ class ReaderFormatFilterFamilyTest {
     }
 
     @Test
-    fun `novel formats share their readable facet`() {
-        assertEquals(ContentType.NOVEL, ContentType.NOVEL.readerFormatFamily())
-        assertEquals(ContentType.NOVEL, ContentType.HENTAI_NOVEL.readerFormatFamily())
+    fun `novels no longer expose a reader facet`() {
+        assertNull(ContentType.NOVEL.readerFormatFamily())
+        assertNull(ContentType.HENTAI_NOVEL.readerFormatFamily())
     }
 
     @Test

@@ -29,16 +29,17 @@ fun ReaderFormatFilter(
     modifier: Modifier = Modifier,
     downFocusLink: FocusRequester? = null,
 ) {
-    val types = listOf(null, ContentType.MANGA, ContentType.NOVEL)
-    val labels = listOf(R.string.all, R.string.content_type_manga, R.string.content_type_novel)
+    val types = listOf(null, ContentType.MANGA)
+    val labels = listOf(R.string.all, R.string.content_type_manga)
         .map { stringResource(it) }
     val icons = listOf(
         R.drawable.ic_filter_content_type,
         R.drawable.ic_content_manga,
-        R.drawable.ic_content_novel,
     )
     val normalizedType = selectedType?.readerFormatFamily()
     val availableFamilies = remember(enabledTypes) { enabledTypes.mapNotNull { it.readerFormatFamily() }.toSet() }
+    // The reader edition has one eligible family; an extra selector adds no value.
+    if (availableFamilies.size <= 1) return
     val selectedIndex = types.indexOf(normalizedType).coerceAtLeast(0)
     val enabled = availableFamilies.isNotEmpty()
     SingleChoiceFilterMenu(
@@ -70,8 +71,7 @@ fun ReaderFormatFilter(
 internal fun ContentType.readerFormatFamily(): ContentType? = when (this) {
     ContentType.MANGA, ContentType.HENTAI_MANGA, ContentType.MANHWA,
     ContentType.MANHUA, ContentType.COMICS, ContentType.ONE_SHOT,
-    ContentType.DOUJINSHI, ContentType.IMAGE_SET, ContentType.ARTIST_CG,
-    ContentType.GAME_CG -> ContentType.MANGA
-    ContentType.NOVEL, ContentType.HENTAI_NOVEL -> ContentType.NOVEL
+    ContentType.DOUJINSHI -> ContentType.MANGA
+    ContentType.NOVEL, ContentType.HENTAI_NOVEL -> null
     else -> null
 }
