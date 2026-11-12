@@ -170,11 +170,11 @@ class LocalLibraryPagingTest {
 		assertEquals(5, novelOnly.size)
 
 		val videoOnly = repository.getList(0, null, ContentListFilter(types = setOf(ContentType.VIDEO)))
-		assertEquals(3, videoOnly.size)
+		assertTrue(videoOnly.isEmpty())
 
-		// 内容分级过滤按 isNsfw()：SAFE 保留所有非成人（漫画+小说+视频），ADULT 只保留成人漫画。
+		// 内容分级过滤只包含阅读内容：SAFE 为漫画+小说；VIDEO 始终被排除。
 		val safeOnly = repository.getList(0, null, ContentListFilter(contentRating = setOf(ContentRating.SAFE)))
-		assertEquals(18, safeOnly.size)
+		assertEquals(15, safeOnly.size)
 
 		val adultOnly = repository.getList(0, null, ContentListFilter(contentRating = setOf(ContentRating.ADULT)))
 		assertEquals(2, adultOnly.size)
