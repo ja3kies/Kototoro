@@ -5,6 +5,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.res.painterResource
@@ -36,17 +37,13 @@ fun ReaderFormatFilter(
         R.drawable.ic_content_manga,
         R.drawable.ic_content_novel,
     )
-    val normalizedType = when (selectedType) {
-        ContentType.MANGA, ContentType.HENTAI_MANGA,
-        ContentType.MANHWA, ContentType.MANHUA -> ContentType.MANGA
-        ContentType.NOVEL, ContentType.HENTAI_NOVEL -> ContentType.NOVEL
-        else -> null
-    }
+    val normalizedType = selectedType?.readerFormatFamily()
+    val availableFamilies = remember(enabledTypes) { enabledTypes.mapNotNull { it.readerFormatFamily() }.toSet() }
     val selectedIndex = types.indexOf(normalizedType).coerceAtLeast(0)
-    val enabled = enabledTypes.any { it == ContentType.MANGA || it == ContentType.NOVEL }
+    val enabled = availableFamilies.isNotEmpty()
     SingleChoiceFilterMenu(
         options = types.mapIndexed { index, type ->
-            FilterFacetOption(type, labels[index], type == normalizedType, type == null || type in enabledTypes)
+            FilterFacetOption(type, labels[index], type == normalizedType, type == null || type in availableFamilies)
         },
         onOptionSelected = onTypeSelected,
         modifier = modifier,
@@ -67,4 +64,14 @@ fun ReaderFormatFilter(
             )
         }
     }
+}
+
+/** Collapse reading sources to Manga and Novel; video never appears in the filter. */
+internal fun ContentType.readerFormatFamily(): ContentType? = when (this) {
+    ContentType.MANGA, ContentType.HENTAI_MANGA, ContentType.MANHWA,
+    ContentType.MANHUA, ContentType.COMICS, ContentType.ONE_SHOT,
+    ContentType.DOUJINSHI, ContentType.IMAGE_SET, ContentType.ARTIST_CG,
+    ContentType.GAME_CG -> ContentType.MANGA
+    ContentType.NOVEL, ContentType.HENTAI_NOVEL -> ContentType.NOVEL
+    else -> null
 }

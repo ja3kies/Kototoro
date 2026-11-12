@@ -40,7 +40,7 @@ class DefaultSpaceRoutePreferencesRepositoryTest {
 	@Test
 	fun `unknown schema is ignored without deleting stored payload`() = runTest {
 		val entity = SpaceRoutePreferencesEntity(
-			spaceId = BuiltInSpaces.Anime.value,
+			spaceId = BuiltInSpaces.Manga.value,
 			routeKey = MAIN_LIST_ROUTE_KEY,
 			payload = "{}",
 			schemaVersion = 999,
@@ -48,8 +48,8 @@ class DefaultSpaceRoutePreferencesRepositoryTest {
 		)
 		dao.upsert(entity)
 
-		repository.load(BuiltInSpaces.Anime, MAIN_LIST_ROUTE_KEY) shouldBe null
-		dao.find(BuiltInSpaces.Anime.value, MAIN_LIST_ROUTE_KEY) shouldBe entity
+		repository.load(BuiltInSpaces.Manga, MAIN_LIST_ROUTE_KEY) shouldBe null
+		dao.find(BuiltInSpaces.Manga.value, MAIN_LIST_ROUTE_KEY) shouldBe entity
 	}
 
 	private class FakeSpaceRoutePreferencesDao : SpaceRoutePreferencesDao() {

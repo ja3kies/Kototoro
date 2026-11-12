@@ -35,8 +35,8 @@ import org.skepsun.kototoro.core.ui.adaptive.TabletLayoutClass
 import org.skepsun.kototoro.core.ui.adaptive.tabletLayoutClass
 import org.skepsun.kototoro.core.ui.gestures.mouseDragScroll
 
-val HomeScreenHorizontalPadding = 12.dp
-val HomeScreenSectionGap = 4.dp
+val HomeScreenHorizontalPadding = 16.dp
+val HomeScreenSectionGap = 12.dp
 
 /** Android's home page layout. Hosts supply data-bound sections and platform scroll/focus adapters. */
 @Composable
@@ -92,7 +92,9 @@ fun HomeScreenLayout(
                 }
             }
             if (!hasHighlights && !initialized) item(key = "home_loading_skeleton") { loading() }
-            if (!(hasHighlights && expanded)) item(key = "home_quick_actions") { quickActions(false) }
+            if (shouldShowHomeQuickActions(initialized, hasHighlights, expanded)) {
+                item(key = "home_quick_actions") { quickActions(false) }
+            }
         }
         if (hasHero && !heroInsideList) {
             hero(
@@ -109,3 +111,7 @@ fun HomeScreenLayout(
         }
     }
 }
+
+/** Hide actions during initial loading; avoid duplicate actions on expanded layouts. */
+internal fun shouldShowHomeQuickActions(initialized: Boolean, hasHighlights: Boolean, expanded: Boolean): Boolean =
+    initialized && (!hasHighlights || !expanded)

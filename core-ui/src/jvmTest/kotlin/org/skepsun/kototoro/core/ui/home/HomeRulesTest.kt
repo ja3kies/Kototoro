@@ -37,6 +37,15 @@ class HomeRulesTest {
     }
 
     @Test
+    fun `quick actions wait for initialization and avoid duplicate tablet actions`() {
+        assertFalse(shouldShowHomeQuickActions(initialized = false, hasHighlights = false, expanded = false))
+        assertFalse(shouldShowHomeQuickActions(initialized = false, hasHighlights = true, expanded = false))
+        assertTrue(shouldShowHomeQuickActions(initialized = true, hasHighlights = false, expanded = false))
+        assertTrue(shouldShowHomeQuickActions(initialized = true, hasHighlights = true, expanded = false))
+        assertFalse(shouldShowHomeQuickActions(initialized = true, hasHighlights = true, expanded = true))
+    }
+
+    @Test
     fun `carousel cards shrink with distance from the focus`() {
         val focus = feedUpdatedFocusWidth(1000.dp, 1f)
         assertEquals(380.dp, focus)
