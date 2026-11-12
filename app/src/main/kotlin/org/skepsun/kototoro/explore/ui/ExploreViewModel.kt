@@ -35,6 +35,7 @@ import org.skepsun.kototoro.explore.data.ContentSourcesRepository
 import org.skepsun.kototoro.explore.domain.ExploreRepository
 import org.skepsun.kototoro.explore.data.SourceAvailabilityRepository
 import org.skepsun.kototoro.explore.ui.model.BrowseGroupTab
+import org.skepsun.kototoro.core.model.ReaderContentPolicy
 import org.skepsun.kototoro.explore.ui.model.SourceTag
 import org.skepsun.kototoro.explore.ui.model.ExploreButtons
 import org.skepsun.kototoro.explore.ui.model.SourceFilter
@@ -121,6 +122,10 @@ class ExploreViewModel @Inject constructor(
     val currentGroupTab: StateFlow<BrowseGroupTab> = globalFavoritesState.selectedGroupTab.scopedToSpace(
         spaceGroupTab = spaceBinding.groupTab,
         coroutineScope = viewModelScope + Dispatchers.Default,
+    ).map { BrowseGroupTab.Content }.stateIn(
+        viewModelScope + Dispatchers.Default,
+        SharingStarted.Eagerly,
+        BrowseGroupTab.Content,
     )
 
     /**
@@ -134,7 +139,7 @@ class ExploreViewModel @Inject constructor(
     val availableTabs: StateFlow<List<BrowseGroupTab>> = settings.observeAsStateFlow(
         scope = viewModelScope + Dispatchers.IO,
         key = AppSettings.KEY_DISABLE_NSFW,
-        valueProducer = { BrowseGroupTab.getAvailableTabs(!isNsfwContentDisabled) },
+        valueProducer = { listOf(BrowseGroupTab.Content) },
     )
 
     /**
@@ -160,7 +165,7 @@ class ExploreViewModel @Inject constructor(
      * Set the selected group tab and filter sources accordingly
      */
     fun setSelectedGroupTab(tab: BrowseGroupTab) {
-        globalFavoritesState.setSelectedGroupTab(tab)
+        globalFavoritesState.setSelectedGroupTab(BrowseGroupTab.Content)
     }
 
     override fun bindSpace(spaceId: org.skepsun.kototoro.space.domain.SpaceId?) {
@@ -370,6 +375,9 @@ class ExploreViewModel @Inject constructor(
     ): List<ContentSourceInfo> {
         val filtered = sources.filter { sourceInfo ->
             val source = sourceInfo.mangaSource
+            if (!ReaderContentPolicy.acceptsSource(source.name, source.contentType)) {
+                return@filter false
+            }
             if (allowedSourceNames != null && source.name !in allowedSourceNames) {
                 return@filter false
             }
