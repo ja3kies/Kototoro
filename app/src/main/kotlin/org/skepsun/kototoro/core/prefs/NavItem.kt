@@ -10,15 +10,13 @@ import org.skepsun.kototoro.R
 const val MAX_MAIN_NAV_ITEM_COUNT = MainNavigationRules.MAX_ITEMS
 
 /**
- * Default main navigation buttons: Home, History, Favourites, Browse and
- * Subscriptions (主页、历史、收藏、浏览、订阅).
+ * Reader navigation buttons: Home, History and Explore.
+ * Library content is available from Home, rather than in a separate tab.
  */
 val defaultMainNavItems = listOf(
     NavItem.HOME,
     NavItem.HISTORY,
-    NavItem.FAVORITES,
     NavItem.EXPLORE,
-    NavItem.FEED,
 )
 
 /**
@@ -31,6 +29,12 @@ internal val migratedLegacyThreeNavItems = listOf(
     NavItem.FAVORITES,
     NavItem.EXPLORE,
 )
+
+/** Keep only Home, History and Explore, preserving their relative order in user preferences. */
+internal fun readerNavigationItems(items: List<NavItem>): List<NavItem> {
+    val filtered = items.distinct().filter { it in defaultMainNavItems }
+    return filtered + defaultMainNavItems.filterNot { it in filtered }
+}
 
 internal fun Iterable<NavItem>.limitMainNavigationItems(): List<NavItem> = MainNavigationRules.limit(this)
 

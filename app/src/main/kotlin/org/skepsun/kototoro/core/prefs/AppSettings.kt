@@ -430,12 +430,11 @@ class AppSettings @Inject constructor(@ApplicationContext private val context: C
                     // 2.0.1 stored the local library tab as DOWNLOADS; DISCOVER left this list for good.
                     resolve = { key -> if (key == "DOWNLOADS") NavItem.LOCAL else NavItem.entries.find(key) },
                     fallback = defaultMainNavItems,
-                    excluded = listOf(NavItem.DISCOVER),
+                    excluded = NavItem.entries.filterNot { it in defaultMainNavItems },
                 )
             }
-            return MainNavigationRules.limit(items).also { limitedItems ->
-                val shouldPersistItems = limitedItems.size != items.size ||
-                    rawStr == legacyThreeItemDefault && isLegacyThreeItemMigrationPending
+            return readerNavigationItems(items).also { limitedItems ->
+                val shouldPersistItems = rawStr != MainNavigationRules.format(limitedItems) { it.name }
                 if (shouldPersistItems || isLegacyThreeItemMigrationPending) {
                     prefs.edit {
                         if (shouldPersistItems) {
@@ -450,7 +449,7 @@ class AppSettings @Inject constructor(@ApplicationContext private val context: C
         }
         set(value) {
             prefs.edit {
-                putString(KEY_NAV_MAIN, MainNavigationRules.format(MainNavigationRules.limit(value)) { it.name })
+                putString(KEY_NAV_MAIN, MainNavigationRules.format(readerNavigationItems(value)) { it.name })
                 putBoolean(KEY_NAV_MAIN_LEGACY_THREE_MIGRATED, true)
             }
         }

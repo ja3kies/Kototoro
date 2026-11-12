@@ -33,7 +33,7 @@ class NavConfigViewModel @Inject constructor(
     private val items = MutableStateFlow(settings.mainNavItems)
 
     /** DISCOVER is a browsing destination the bar never took; it stays out of both the list and the picker. */
-    private val excludedNavItems = listOf(NavItem.DISCOVER)
+    private val excludedNavItems = NavItem.entries.filterNot { it in org.skepsun.kototoro.core.prefs.defaultMainNavItems }
 
     val configuredItems: StateFlow<List<NavItemConfigModel>> = items.map { snapshot ->
         snapshot.map {
@@ -54,19 +54,19 @@ class NavConfigViewModel @Inject constructor(
     )
 
     val canShowAddAction: StateFlow<Boolean> = items.map { snapshot ->
-        snapshot.size < NavItem.entries.size
+        false
     }.stateIn(
         viewModelScope + Dispatchers.Default,
         SharingStarted.WhileSubscribed(5000),
-        items.value.size < NavItem.entries.size,
+        false,
     )
 
     val canAddAction: StateFlow<Boolean> = items.map { snapshot ->
-        MainNavigationRules.canAdd(snapshot)
+        false
     }.stateIn(
         viewModelScope + Dispatchers.Default,
         SharingStarted.WhileSubscribed(5000),
-        MainNavigationRules.canAdd(items.value),
+        false,
     )
 
     val content: StateFlow<List<ListModel>> = items.map { snapshot ->
@@ -96,19 +96,9 @@ class NavConfigViewModel @Inject constructor(
         commit(updated)
     }
 
-    fun addItem(item: NavItem) {
-        val updated = MainNavigationRules.add(items.value, item)
-        if (updated === items.value) return
-        items.value = updated
-        commit(updated)
-    }
-
-    fun removeItem(item: NavItem) {
-        // The list never empties: dropping the last destination brings HOME back, as the shared rules decide.
-        val updated = MainNavigationRules.remove(items.value, item, NavItem.HOME)
-        items.value = updated
-        commit(updated)
-    }
+    // The three required reader tabs cannot be added or removed.
+    fun addItem(item: NavItem) = Unit
+    fun removeItem(item: NavItem) = Unit
 
     private fun commit(value: List<NavItem>) {
         // Persist synchronously. The setter is a plain SharedPreferences putString and
@@ -156,8 +146,6 @@ class NavConfigViewModel @Inject constructor(
         snapshot.mapTo(this) {
             NavItemConfigModel(it, getUnavailabilityHint(it))
         }
-        if (size < NavItem.entries.size) {
-            add(NavItemAddModel(MainNavigationRules.canAdd(snapshot)))
-        }
+        // No add action: all reader destinations are already present.
     }
 }

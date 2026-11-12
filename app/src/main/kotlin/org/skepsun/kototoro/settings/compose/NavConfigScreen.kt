@@ -58,6 +58,7 @@ fun NavConfigScreen(
             canAddAction = canAddAction,
             onAddItem = { onAddItem(NavItem.valueOf(it)) },
             onRemoveItem = { onRemoveItem(NavItem.valueOf(it)) },
+            allowRemoval = false,
             onReorder = onReorder,
             modifier = Modifier.fillMaxSize(),
             contentPadding = PaddingValues(

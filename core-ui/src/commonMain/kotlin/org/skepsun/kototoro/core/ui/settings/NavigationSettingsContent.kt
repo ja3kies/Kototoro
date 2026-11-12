@@ -44,6 +44,7 @@ fun NavigationSettingsContent(
     onAddItem: (String) -> Unit,
     onRemoveItem: (String) -> Unit,
     onReorder: (Int, Int) -> Unit,
+    allowRemoval: Boolean = true,
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     showMoveButtons: Boolean = false,
@@ -154,9 +155,11 @@ fun NavigationSettingsContent(
                                 else Text("≡")
                             }
                         }
-                        IconButton({ onRemoveItem(item.id) }, enabled = enabled,
-                            modifier = removeButtonModifier.testTag("nav-config-remove:${item.id}")) {
-                            Icon(ReaderPanelIcons.Delete, contentDescription = remove)
+                        if (allowRemoval) {
+                            IconButton({ onRemoveItem(item.id) }, enabled = enabled,
+                                modifier = removeButtonModifier.testTag("nav-config-remove:${item.id}")) {
+                                Icon(ReaderPanelIcons.Delete, contentDescription = remove)
+                            }
                         }
                     }
                 }
