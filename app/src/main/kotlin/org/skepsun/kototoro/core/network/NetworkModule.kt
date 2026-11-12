@@ -25,7 +25,6 @@ import org.skepsun.kototoro.core.network.webview.CloudflareSolveCoordinator
 import org.skepsun.kototoro.core.network.webview.WebViewClearanceSolver
 import org.skepsun.kototoro.core.network.webview.WebViewExecutor
 import org.skepsun.kototoro.core.prefs.AppSettings
-import org.skepsun.kototoro.core.util.ext.assertNotInMainThread
 import org.skepsun.kototoro.core.util.ext.printStackTraceDebug
 import org.skepsun.kototoro.local.data.LocalStorageManager
 import java.util.concurrent.TimeUnit
@@ -75,7 +74,10 @@ interface NetworkModule {
             clearanceSolver: WebViewClearanceSolver,
             solveCoordinator: CloudflareSolveCoordinator,
         ): OkHttpClient = OkHttpClient.Builder().apply {
-            assertNotInMainThread()
+            // Hilt can construct this singleton while MainActivity is created on the UI thread.
+            // Configuring the client is not a network request; rejecting this thread here
+            // crashes the application before its first frame. OkHttp dispatches requests
+            // on its own executor; callers must still keep synchronous calls off main.
             val chromeTlsSpec = ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS)
                 .tlsVersions(TlsVersion.TLS_1_3, TlsVersion.TLS_1_2)
                 .cipherSuites(
