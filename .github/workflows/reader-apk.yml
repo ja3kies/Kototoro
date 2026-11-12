@@ -27,13 +27,13 @@ jobs:
     runs-on: ubuntu-24.04
     timeout-minutes: 90
     env:
-      GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx3g -Dkotlin.daemon.jvmargs=-Xmx2g -Dorg.gradle.workers.max=2 -Dfile.encoding=UTF-8
+      GRADLE_OPTS: -Dorg.gradle.jvmargs=-Xmx3g -Dkotlin.daemon.jvmargs=-Xmx6g -Dorg.gradle.workers.max=2 -Dfile.encoding=UTF-8
     steps:
       - uses: actions/checkout@v5
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'
       - uses: gradle/actions/setup-gradle@v5
       - uses: android-actions/setup-android@v3
         with:
@@ -47,7 +47,7 @@ jobs:
           free -h
           df -h .
       - name: Compile and package debug APK
-        run: ./gradlew :app:assembleDebug --no-daemon --console=plain --stacktrace --max-workers=2 --no-configuration-cache -Pkotlin.daemon.jvmargs=-Xmx2g -Dorg.gradle.jvmargs=-Xmx3g
+        run: ./gradlew :app:assembleDebug --no-daemon --console=plain --stacktrace --max-workers=2 --no-configuration-cache -Pkotlin.daemon.jvmargs=-Xmx6g -Dorg.gradle.jvmargs=-Xmx3g
       - name: Verify debug APK and record SHA-256
         shell: bash
         run: |
