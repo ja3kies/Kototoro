@@ -41,10 +41,11 @@ The shared home layout previously omitted its greeting/discovery content when in
 ## Validation and limits
 
 - `git diff --check`: passed.
-- Local Gradle wrapper successfully extracted after disk space became available.
-- `./gradlew :core-ui:jvmTest :app:assembleDebug --no-daemon --console=plain --max-workers=2`: failed before project compilation because Gradle's native SystemInfo service is unavailable on this Android/Termux host.
-- Existing CI run `42818366376` was previously reported failed. Attempts to retrieve job details returned HTTP 502 and a connector timeout.
-- The newly modified desktop UI test has not run. No APK, visual validation or performance improvement is claimed.
+- `:core-ui:jvmTest --rerun-tasks`: passed on Ubuntu ARM64/JDK 21. All 24 tasks executed; shared `core-ui` source and JVM tests recompiled.
+- Android unit tests and APK build were attempted after installing SDK 37.0/37.1, build-tools 37.0.0, CMake 3.22.1 and NDK 28.2.13676358. Gradle reached `:app:compileDebugKotlin`, but the process ended without a build result after prolonged ARM compilation. No APK was produced.
+- The focused desktop UI test could not start: optional desktop configuration requires pinned Mihon compatibility JARs, which are not present locally.
+- New CI run `43096501107` remains queued after more than 10 hours. GitHub returned HTTP 502 when fetching its job list.
+- No visual validation or performance improvement is claimed.
 
 ## Rollback
 
