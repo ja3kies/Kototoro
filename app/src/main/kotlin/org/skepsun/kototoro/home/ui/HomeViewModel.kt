@@ -155,7 +155,7 @@ class HomeViewModel @Inject constructor(
         .flowOn(Dispatchers.Default)
         .shareIn(viewModelScope, SharingStarted.Eagerly, replay = 1)
     private val recentHistoryFlow = recentHistoryWithMetadataFlow
-        .map { items -> items.map(ContentWithHistory::manga) }
+        .map { items -> items.map(ContentWithHistory::manga).filter { it.contentTab() == HomeContentTab.MANGA } }
         .distinctUntilChanged()
         .onEach { items ->
             logHomeDiag("recentHistoryFlow", "items=${items.homeContentSignature()}")
@@ -451,7 +451,8 @@ class HomeViewModel @Inject constructor(
                     sourceGroupManager = sourceGroupManager,
                     preset = preset,
                 )
-                .filteredNsfw(false)
+.filteredNsfw(false)
+                .let { state -> state.takeIf { it.content?.contentTab() == HomeContentTab.MANGA } ?: HomeResumeState() }
             val recentHistory = contentData.history
                 .map { content -> content.withOverride(displayContentOverrides[content.id]) }
                 .map { content -> HomeRecentItem(content = content, groupKey = content.id) }
@@ -467,6 +468,7 @@ class HomeViewModel @Inject constructor(
                         counter = tracking.newChapters,
                     )
                 }
+                .filter { it.content.contentTab() == HomeContentTab.MANGA }
                 .selectHomeUpdatesByTab(selectedTab, selectedSourceTags, sourceGroupManager, preset)
             val recommendations = allRecommendations
                 .map { content -> content.withOverride(displayContentOverrides[content.id]) }
@@ -504,7 +506,7 @@ class HomeViewModel @Inject constructor(
             )
             HomeSummaryState(
                 selectedTab = selectedTab,
-                resumeState = contentData.resumeState,
+                resumeState = contentData.resumeState.takeIf { it.content?.contentTab() == HomeContentTab.MANGA } ?: HomeResumeState(),
                 favoritesCount = meta.favoritesCount,
                 favoriteCategoriesCount = meta.favoriteCategoriesCount,
                 recentSearches = recentSearches.map { HomeRecentSearchItem(it) },
@@ -737,8 +739,7 @@ private fun HomeContentTab?.toBrowseGroupTab(): org.skepsun.kototoro.explore.ui.
 
 private fun BrowseGroupTab.toHomeContentTab(): HomeContentTab? = when (this) {
     BrowseGroupTab.Content -> HomeContentTab.MANGA
-    BrowseGroupTab.Novel -> HomeContentTab.NOVEL
-    BrowseGroupTab.Video -> HomeContentTab.VIDEO
+    BrowseGroupTab.Novel, BrowseGroupTab.Video -> null
     BrowseGroupTab.All -> null
 }
 

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="renga_my_library">Ma bibliothèque</string>
+    <string name="renga_continue_reading">Mes lectures récentes</string>
+
     <string name="read_more">Lire la suite</string>
     <string name="tracker_warning">Certains appareils ont un comportement différent du système, ce qui peut interrompre les tâches d\'arrière-plan.</string>
     <string name="backup_saved">Sauvegarde enregistrée</string>
@@ -951,7 +954,7 @@
     <string name="aniyomi_source_count">%d source(s) disponible(s)</string>
     <string name="aniyomi_sources">Aniyomi</string>
     <string name="aniyomi_sources_directory">Répertoire des extensions Aniyomi</string>
-    <string name="app_name">Kototoro</string>
+    <string name="app_name">Renga</string>
     <string name="assembling_apk">Assemblage de la mise à jour incrémentielle. Veuillez patienter…</string>
     <string name="auth_title">Authentification</string>
     <string name="auto_double_foldable">Deux pages automatique sur pliable</string>

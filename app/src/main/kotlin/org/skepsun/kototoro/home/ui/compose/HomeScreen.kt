@@ -196,21 +196,15 @@ fun HomeScreen(
             resumeGroupKey = state.resumeState.groupKey,
             resumeProgressPercent = state.resumeState.progressPercent,
             historyItems = state.recentHistoryItems,
-            updateItems = state.recentUpdates,
-            recommendationItems = state.recommendations,
+            updateItems = emptyList(),
+            recommendationItems = emptyList(),
         )
     }
     val quickActions = listOf(
-            HomeQuickAction(stringResource(R.string.home_quick_action_wizard), R.drawable.ic_welcome, actions.onSetupWizardClick),
-            HomeQuickAction(stringResource(R.string.favourites), R.drawable.ic_heart, actions.onLibraryOpenClick),
-            HomeQuickAction(stringResource(R.string.bookmarks), R.drawable.ic_bookmark, actions.onBookmarksClick),
-            HomeQuickAction(stringResource(R.string.local_storage), R.drawable.ic_storage, actions.onLocalClick),
-            HomeQuickAction(stringResource(R.string.downloads), R.drawable.ic_download, actions.onDownloadsClick),
-            HomeQuickAction(stringResource(R.string.random), R.drawable.ic_dice, actions.onRandomClick, !isRandomLoading),
-            HomeQuickAction(stringResource(R.string.home_quick_action_extensions), R.drawable.ic_extension, actions.onManageSourcesClick),
-            HomeQuickAction(stringResource(R.string.translation_settings), R.drawable.ic_language, actions.onAutoTranslateClick),
-            HomeQuickAction(stringResource(R.string.reader_settings), R.drawable.ic_read, actions.onReaderSettingsClick),
-            HomeQuickAction(stringResource(R.string.settings), R.drawable.ic_settings, actions.onSettingsClick),
+        HomeQuickAction(stringResource(R.string.renga_my_library), R.drawable.ic_read, actions.onLibraryOpenClick),
+        HomeQuickAction(stringResource(R.string.downloads), R.drawable.ic_download, actions.onDownloadsClick),
+        HomeQuickAction(stringResource(R.string.home_quick_action_extensions), R.drawable.ic_extension, actions.onManageSourcesClick),
+        HomeQuickAction(stringResource(R.string.settings), R.drawable.ic_settings, actions.onSettingsClick),
     )
     val topInset = contentPadding.calculateTopPadding()
     val scrollTopInset = if (heroEntries.isEmpty()) {
@@ -219,8 +213,7 @@ fun HomeScreen(
         0.dp
     }
     val hasHighlights = heroEntries.isNotEmpty() ||
-        state.recentHistoryItems.isNotEmpty() || state.recentUpdates.isNotEmpty() ||
-        state.recommendations.isNotEmpty() || recentSearches.isNotEmpty()
+        state.recentHistoryItems.isNotEmpty() || state.recentUpdates.isNotEmpty()
     HomeScreenLayout(
         hasHero = heroEntries.isNotEmpty(),
         hasHighlights = hasHighlights,
@@ -266,14 +259,14 @@ fun HomeScreen(
                 recentHistoryCount = state.recentHistoryCount,
                 updateItems = state.recentUpdates,
                 unreadUpdatesCount = state.unreadUpdatesCount,
-                recommendationItems = state.recommendations,
-                recommendationsCount = state.recommendationsCount,
-                recentSearches = recentSearches,
+                recommendationItems = emptyList(),
+                recommendationsCount = 0,
+                recentSearches = emptyList(),
                 historyStyle = historyRailStyle,
                 updatesStyle = updatesRailStyle,
                 recommendationsStyle = recommendationsRailStyle,
                 onItemClick = onContentClick,
-                onViewAllRecentClick = actions.onViewAllRecentClick,
+                onViewAllRecentClick = actions.onLibraryOpenClick,
                 onViewAllUpdatesClick = actions.onViewAllUpdatesClick,
                 onViewAllRecommendationsClick = actions.onViewAllRecommendationsClick,
                 onConfigureHistoryClick = actions.onConfigureHistoryClick,
