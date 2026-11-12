@@ -6,7 +6,8 @@ code; it does not purport to port SCANCORE's cross-platform C++ code.
 
 ## Reader-first navigation
 
-- Home: resume the latest reading session, preview recently opened works and open My Library.
+- Home: resume the latest reading session and show a library shelf sourced from persisted favorites,
+  sorted by last read. The full library opens from its header or quick action.
 - History: recently read chapters (the history remains stored).
 - Explore: find new works and configure manga-compatible sources.
 
@@ -37,7 +38,8 @@ See https://github.com/medium-gh/scancore and https://github.com/Kototoro-app/Ko
 
 ### Remaining work
 
-- Dedicated "reading in progress" library query (currently Home previews recent reading history).
+- Filter the library shelf to explicitly in-progress works with progress and completion metadata;
+  the first iteration currently shows most recently read favorites (not necessarily unfinished).
 - Complete removal of video and novel modules/dependencies only after a reference audit.
 - Device UI tests, full regression suite, measured performance and migration testing.
 - Distinct release package ID and an explicit data migration plan.

@@ -91,6 +91,8 @@ data class HomeSummaryState(
     val selectedTab: HomeContentTab? = null,
     val recentHistoryCount: Int = 0,
     val recentHistoryItems: List<HomeRecentItem> = emptyList(),
+    /** Persisted favorites sorted by last read, used for the Home library shelf. */
+    val libraryItems: List<HomeRecentItem> = emptyList(),
     val resumeState: HomeResumeState = HomeResumeState(),
     val favoritesCount: Int = 0,
     val favoriteCategoriesCount: Int = 0,

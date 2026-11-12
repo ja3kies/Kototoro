@@ -109,7 +109,7 @@ internal fun HomeHighlightsSections(
     ) {
         if (historyItems.isNotEmpty()) {
             HomeContentRowSection(
-                title = stringResource(R.string.renga_continue_reading),
+                title = stringResource(R.string.renga_my_library),
                 sectionKey = "recent_history",
                 items = historyDisplayItems,
                 count = recentHistoryCount,

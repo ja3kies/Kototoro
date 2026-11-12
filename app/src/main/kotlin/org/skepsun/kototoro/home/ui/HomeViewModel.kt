@@ -397,11 +397,24 @@ class HomeViewModel @Inject constructor(
             )
         }
 
+    private val homeLibraryFlow = favouritesRepository.observeAll(
+        order = ListSortOrder.LAST_READ,
+        filterOptions = emptySet(),
+        limit = 24,
+    ).map { items ->
+        items.asSequence()
+            .filter { it.contentTab() == HomeContentTab.MANGA }
+            .distinctBy(Content::id)
+            .map { HomeRecentItem(content = it, groupKey = it.id) }
+            .toList()
+    }.onStart { emit(emptyList()) }.distinctUntilChanged()
+
     val summaryState = combine(
         selectedTabFlow,
         combine(selectedSourceTagsFlow, activePresetFlow, ::Pair),
         contentDataFlow,
         metaFlow,
+        homeLibraryFlow,
         combine(
             recentSearchesFlow,
             isSuggestionNsfwDisabledFlow,
@@ -416,7 +429,9 @@ class HomeViewModel @Inject constructor(
         val contentData = values[2] as ContentDataSnapshot
         val meta = values[3] as HomeMetaSnapshot
         @Suppress("UNCHECKED_CAST")
-        val extras = values[4] as Pair<List<String>, Boolean>
+        val libraryItems = values[4] as List<HomeRecentItem>
+        @Suppress("UNCHECKED_CAST")
+        val extras = values[5] as Pair<List<String>, Boolean>
         val selectedSourceTags = tagsAndPreset.first
         val preset = tagsAndPreset.second
         val isSuggestionNsfwDisabled = extras.second
@@ -479,6 +494,7 @@ class HomeViewModel @Inject constructor(
                 selectedTab = selectedTab,
                 recentHistoryCount = meta.recentHistoryCount,
                 recentHistoryItems = recentHistory,
+                libraryItems = libraryItems,
                 resumeState = resumeState,
                 favoritesCount = meta.favoritesCount,
                 favoriteCategoriesCount = meta.favoriteCategoriesCount,

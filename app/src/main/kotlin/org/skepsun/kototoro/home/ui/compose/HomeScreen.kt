@@ -213,7 +213,7 @@ fun HomeScreen(
         0.dp
     }
     val hasHighlights = heroEntries.isNotEmpty() ||
-        state.recentHistoryItems.isNotEmpty() || state.recentUpdates.isNotEmpty()
+        state.libraryItems.isNotEmpty() || state.recentUpdates.isNotEmpty()
     HomeScreenLayout(
         hasHero = heroEntries.isNotEmpty(),
         hasHighlights = hasHighlights,
@@ -255,8 +255,8 @@ fun HomeScreen(
         },
         highlights = {
             HomeHighlightsSections(
-                historyItems = state.recentHistoryItems,
-                recentHistoryCount = state.recentHistoryCount,
+                historyItems = state.libraryItems,
+                recentHistoryCount = state.libraryItems.size,
                 updateItems = state.recentUpdates,
                 unreadUpdatesCount = state.unreadUpdatesCount,
                 recommendationItems = emptyList(),
